@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class PelatihanModel extends Model
+{
+    protected $table = 'pelatihan';
+    protected $primaryKey = 'id';
+    protected $allowedFields = [
+        'judul',
+        'video_pelatihan',
+        'caption_pelatihan',
+        'akses_publik',
+        'user_id'
+    ];
+
+    protected $useTimestamps = true;
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
+
+    public function getPelatihanWithUser($id = false)
+    {
+        if ($id === false) {
+            return $this->select('pelatihan.*, user.nama as user_nama')
+                ->join('user', 'user.id = pelatihan.user_id')
+                ->findAll();
+        }
+
+        return $this->select('pelatihan.*, user.nama as user_nama')
+            ->join('user', 'user.id = pelatihan.user_id')
+            ->where(['pelatihan.id' => $id])
+            ->first();
+    }
+
+    public function getPublicPelatihan($limit = null)
+    {
+        $builder = $this->where('akses_publik', 1)
+            ->orderBy('created_at', 'DESC');
+
+        if ($limit) {
+            $builder->limit($limit);
+        }
+
+        return $builder->findAll();
+    }
+}

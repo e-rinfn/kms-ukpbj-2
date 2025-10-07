@@ -1,0 +1,106 @@
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+use Smalot\PdfParser\Parser;
+
+class PengetahuanModel extends Model
+{
+    protected $table = 'pengetahuan';
+    protected $primaryKey = 'id';
+    protected $allowedFields = ['judul', 'thumbnail_pengetahuan', 'file_pdf_pengetahuan', 'caption_pengetahuan', 'akses_publik', 'user_id'];
+    protected $useTimestamps = true;
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
+
+    // public function getPengetahuanWithUser($id = false)
+    // {
+    //     if ($id === false) {
+    //         return $this->select('pengetahuan.*, user.nama as user_nama')
+    //             ->join('user', 'user.id = pengetahuan.user_id')
+    //             ->findAll();
+    //     }
+
+    //     return $this->select('pengetahuan.*, user.nama as user_nama')
+    //         ->join('user', 'user.id = pengetahuan.user_id')
+    //         ->where(['pengetahuan.id' => $id])
+    //         ->first();
+    // }
+
+    // public function getPengetahuanWithUser($keyword = null)
+    // {
+    //     $builder = $this->db->table('pengetahuan');
+    //     $builder->select('pengetahuan.*, user.username');
+    //     $builder->join('user', 'user.id = pengetahuan.user_id');
+    //     $builder->where('pengetahuan.akses_publik', 1);
+
+    //     if (!empty($keyword)) {
+    //         $builder->groupStart()
+    //             ->like('pengetahuan.judul', $keyword)
+    //             ->orLike('pengetahuan.caption_pengetahuan', $keyword)
+    //             ->groupEnd();
+    //     }
+
+    //     return $builder->get()->getResultArray();
+    // }
+
+    public function getPengetahuanWithUser($keyword = null)
+    {
+        $builder = $this->db->table('pengetahuan');
+        $builder->select('pengetahuan.*, user.nama as user_nama');
+        $builder->join('user', 'user.id = pengetahuan.user_id');
+        $builder->where('pengetahuan.akses_publik', 1);
+
+        if (!empty($keyword)) {
+            $builder->groupStart()
+                ->like('pengetahuan.judul', $keyword)
+                ->orLike('pengetahuan.caption_pengetahuan', $keyword)
+                ->groupEnd();
+        }
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function getPengetahuanWithUserById($id)
+    {
+        return $this->select('pengetahuan.*, user.nama as user_nama')
+            ->join('user', 'user.id = pengetahuan.user_id')
+            ->where('pengetahuan.id', $id)
+            ->first();
+    }
+
+
+    public function getPublicPengetahuan($limit = null)
+    {
+        $builder = $this->where('akses_publik', 1)
+            ->orderBy('created_at', 'DESC');
+
+        if ($limit) {
+            $builder->limit($limit);
+        }
+
+        return $builder->findAll();
+    }
+    public function extractTextFromPdf($filePath)
+    {
+        try {
+            if (!file_exists($filePath)) {
+                throw new \Exception("File PDF tidak ditemukan: " . $filePath);
+            }
+
+            $parser = new Parser();
+            $pdf = $parser->parseFile($filePath);
+            $text = $pdf->getText();
+
+            if (empty($text)) {
+                throw new \Exception("Tidak bisa mengekstrak teks dari PDF");
+            }
+
+            return $text;
+        } catch (\Exception $e) {
+            log_message('error', 'PDF Parse Error: ' . $e->getMessage());
+            return "ERROR: " . $e->getMessage();
+        }
+    }
+}
