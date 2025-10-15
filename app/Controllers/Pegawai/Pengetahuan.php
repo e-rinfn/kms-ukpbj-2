@@ -72,46 +72,57 @@ class Pengetahuan extends BaseController
                 'errors' => [
                     'uploaded' => 'Pilih file PDF terlebih dahulu',
                     'max_size' => 'Ukuran file maksimal 50MB',
-                    'ext_in' => 'File harus berformat PDF'
+                    'ext_in'   => 'File harus berformat PDF'
                 ]
             ],
             'thumbnail' => [
-                'rules' => 'uploaded[thumbnail]|max_size[thumbnail,1024]|is_image[thumbnail]|mime_in[thumbnail,image/jpg,image/jpeg,image/png]',
+                // Tidak wajib upload, tapi jika ada harus valid
+                'rules' => 'if_exist|max_size[thumbnail,1024]|is_image[thumbnail]|mime_in[thumbnail,image/jpg,image/jpeg,image/png]',
                 'errors' => [
-                    'uploaded' => 'Pilih thumbnail terlebih dahulu',
                     'max_size' => 'Ukuran gambar maksimal 1MB',
                     'is_image' => 'Yang anda pilih bukan gambar',
-                    'mime_in' => 'Yang anda pilih bukan gambar'
+                    'mime_in'  => 'Yang anda pilih bukan gambar'
                 ]
             ]
         ])) {
-            return redirect()->to('/pegawai/pengetahuan/create')->withInput()->with('validation', $this->validator);
+            return redirect()->to('/pegawai/pengetahuan/create')
+                ->withInput()
+                ->with('validation', $this->validator);
         }
 
-
-        // Upload file PDF
+        // Upload file PDF (wajib)
         $filePdf = $this->request->getFile('file_pdf');
-        $namaPdf = $filePdf->getRandomName();
+        $originalPdfName = pathinfo($filePdf->getClientName(), PATHINFO_FILENAME);
+        $extensionPdf    = $filePdf->getClientExtension();
+        $slugPdfName     = url_title($originalPdfName, '_', true);
+        $namaPdf         = rand(1000, 9999) . '_' . $slugPdfName . '.' . $extensionPdf;
         $filePdf->move('assets/uploads/pengetahuan', $namaPdf);
 
-        // Upload thumbnail
+        // Upload thumbnail (opsional)
+        $namaThumbnail = null;
         $thumbnail = $this->request->getFile('thumbnail');
-        $namaThumbnail = $thumbnail->getRandomName();
-        $thumbnail->move('assets/uploads/pengetahuan', $namaThumbnail);
+        if ($thumbnail && $thumbnail->isValid() && !$thumbnail->hasMoved()) {
+            $originalThumbName = pathinfo($thumbnail->getClientName(), PATHINFO_FILENAME);
+            $extensionThumb    = $thumbnail->getClientExtension();
+            $slugThumbName     = url_title($originalThumbName, '_', true);
+            $namaThumbnail     = rand(1000, 9999) . '_' . $slugThumbName . '.' . $extensionThumb;
+            $thumbnail->move('assets/uploads/pengetahuan', $namaThumbnail);
+        }
 
         // Simpan ke database
         $this->pengetahuanModel->save([
-            'judul' => $this->request->getVar('judul'),
+            'judul'                => $this->request->getVar('judul'),
             'file_pdf_pengetahuan' => $namaPdf,
-            'thumbnail_pengetahuan' => $namaThumbnail,
-            'caption_pengetahuan' => $this->request->getVar('caption'),
-            'akses_publik' => $this->request->getVar('akses_publik') ? 1 : 0,
-            'user_id' => session()->get('id')
+            'thumbnail_pengetahuan' => $namaThumbnail, // bisa null
+            'caption_pengetahuan'  => $this->request->getVar('caption'),
+            'akses_publik'         => $this->request->getVar('akses_publik') ? 1 : 0,
+            'user_id'              => session()->get('id')
         ]);
 
         session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
         return redirect()->to('/pegawai/pengetahuan');
     }
+
 
 
     public function edit($id)
@@ -134,28 +145,33 @@ class Pengetahuan extends BaseController
     {
         $pengetahuan = $this->pengetahuanModel->find($id);
 
+        // Validasi
         $rules = [
             'judul' => 'required'
         ];
 
-        if ($this->request->getFile('file_pdf')->getError() != 4) {
+        // Validasi file PDF - PERBAIKAN: selalu tambahkan validasi untuk file PDF
+        $filePdf = $this->request->getFile('file_pdf');
+        if ($filePdf->getError() != 4) { // Error 4 berarti tidak ada file yang diupload
             $rules['file_pdf'] = [
-                'rules' => 'uploaded[file_pdf]|max_size[file_pdf,5120]|ext_in[file_pdf,pdf]',
+                'rules' => 'uploaded[file_pdf]|max_size[file_pdf,51200]|ext_in[file_pdf,pdf]',
                 'errors' => [
                     'uploaded' => 'Pilih file PDF terlebih dahulu',
                     'max_size' => 'Ukuran file maksimal 5MB',
-                    'ext_in' => 'File harus berformat PDF'
+                    'ext_in'   => 'File harus berformat PDF'
                 ]
             ];
         }
 
-        if ($this->request->getFile('thumbnail')->getError() != 4) {
+        // Validasi thumbnail - PERBAIKAN: gunakan getError() != 4
+        $thumbnail = $this->request->getFile('thumbnail');
+        if ($thumbnail->getError() != 4) {
             $rules['thumbnail'] = [
                 'rules' => 'max_size[thumbnail,1024]|is_image[thumbnail]|mime_in[thumbnail,image/jpg,image/jpeg,image/png]',
                 'errors' => [
                     'max_size' => 'Ukuran gambar maksimal 1MB',
                     'is_image' => 'Yang anda pilih bukan gambar',
-                    'mime_in' => 'Yang anda pilih bukan gambar'
+                    'mime_in'  => 'Yang anda pilih bukan gambar'
                 ]
             ];
         }
@@ -165,27 +181,29 @@ class Pengetahuan extends BaseController
         }
 
         $data = [
-            'judul' => $this->request->getVar('judul'),
+            'judul'              => $this->request->getVar('judul'),
             'caption_pengetahuan' => $this->request->getVar('caption'),
-            'akses_publik' => $this->request->getVar('akses_publik') ? 1 : 0,
+            'akses_publik'       => $this->request->getVar('akses_publik') ? 1 : 0,
         ];
 
-        // Update file PDF jika ada
-        $filePdf = $this->request->getFile('file_pdf');
-        if ($filePdf->getError() != 4) {
-            unlink('assets/uploads/pengetahuan/' . $pengetahuan['file_pdf_pengetahuan']);
-            $namaPdf = $filePdf->getRandomName();
+        // Update PDF - PERBAIKAN: gunakan getError() != 4
+        if ($filePdf->getError() != 4 && $filePdf->isValid() && !$filePdf->hasMoved()) {
+            // hapus file lama
+            if (!empty($pengetahuan['file_pdf_pengetahuan']) && file_exists('assets/uploads/pengetahuan/' . $pengetahuan['file_pdf_pengetahuan'])) {
+                unlink('assets/uploads/pengetahuan/' . $pengetahuan['file_pdf_pengetahuan']);
+            }
+            // simpan file baru
+            $namaPdf = rand(1000, 9999) . '_' . $filePdf->getClientName();
             $filePdf->move('assets/uploads/pengetahuan', $namaPdf);
             $data['file_pdf_pengetahuan'] = $namaPdf;
         }
 
-        // Update thumbnail jika ada
-        $thumbnail = $this->request->getFile('thumbnail');
-        if ($thumbnail->getError() != 4) {
-            if ($pengetahuan['thumbnail_pengetahuan'] != 'default.jpg') {
+        // Update Thumbnail - PERBAIKAN: gunakan getError() != 4
+        if ($thumbnail->getError() != 4 && $thumbnail->isValid() && !$thumbnail->hasMoved()) {
+            if (!empty($pengetahuan['thumbnail_pengetahuan']) && $pengetahuan['thumbnail_pengetahuan'] != 'default.jpg' && file_exists('assets/uploads/pengetahuan/' . $pengetahuan['thumbnail_pengetahuan'])) {
                 unlink('assets/uploads/pengetahuan/' . $pengetahuan['thumbnail_pengetahuan']);
             }
-            $namaThumbnail = $thumbnail->getRandomName();
+            $namaThumbnail = rand(1000, 9999) . '_' . $thumbnail->getClientName();
             $thumbnail->move('assets/uploads/pengetahuan', $namaThumbnail);
             $data['thumbnail_pengetahuan'] = $namaThumbnail;
         }
@@ -195,102 +213,6 @@ class Pengetahuan extends BaseController
         session()->setFlashdata('pesan', 'Data berhasil diubah.');
         return redirect()->to('/pegawai/pengetahuan');
     }
-
-    // public function update($id)
-    // {
-    //     $pengetahuan = $this->pengetahuanModel->find($id);
-
-    //     $rules = [
-    //         'judul' => 'required'
-    //     ];
-
-    //     // Validasi file PDF jika di-upload
-    //     if ($this->request->getFile('file_pdf')->getError() != 4) {
-    //         $rules['file_pdf'] = [
-    //             'rules' => 'uploaded[file_pdf]|max_size[file_pdf,5120]|ext_in[file_pdf,pdf]',
-    //             'errors' => [
-    //                 'uploaded' => 'Pilih file PDF terlebih dahulu',
-    //                 'max_size' => 'Ukuran file maksimal 5MB',
-    //                 'ext_in' => 'File harus berformat PDF'
-    //             ]
-    //         ];
-    //     }
-
-    //     // Validasi thumbnail jika di-upload
-    //     if ($this->request->getFile('thumbnail')->getError() != 4) {
-    //         $rules['thumbnail'] = [
-    //             'rules' => 'max_size[thumbnail,1024]|is_image[thumbnail]|mime_in[thumbnail,image/jpg,image/jpeg,image/png]',
-    //             'errors' => [
-    //                 'max_size' => 'Ukuran gambar maksimal 1MB',
-    //                 'is_image' => 'Yang anda pilih bukan gambar',
-    //                 'mime_in' => 'Yang anda pilih bukan gambar'
-    //             ]
-    //         ];
-    //     }
-
-    //     if (!$this->validate($rules)) {
-    //         return redirect()->to('/pegawai/pengetahuan/edit/' . $id)->withInput();
-    //     }
-
-    //     $data = [
-    //         'judul' => $this->request->getVar('judul'),
-    //         'caption_pengetahuan' => $this->request->getVar('caption'),
-    //         'akses_publik' => $this->request->getVar('akses_publik') ? 1 : 0,
-    //     ];
-
-    //     // Update file PDF jika ada
-    //     $filePdf = $this->request->getFile('file_pdf');
-    //     if ($filePdf->getError() != 4) {
-    //         $pdfLama = 'assets/uploads/pengetahuan/' . $pengetahuan['file_pdf_pengetahuan'];
-    //         if (!empty($pengetahuan['file_pdf_pengetahuan']) && file_exists($pdfLama)) {
-    //             unlink($pdfLama);
-    //         }
-
-    //         $namaPdf = $filePdf->getRandomName();
-    //         $filePdf->move('assets/uploads/pengetahuan', $namaPdf);
-    //         $data['file_pdf_pengetahuan'] = $namaPdf;
-    //     }
-
-    //     // Update thumbnail jika ada
-    //     $thumbnail = $this->request->getFile('thumbnail');
-    //     if ($thumbnail->getError() != 4) {
-    //         $thumbnailLama = 'assets/uploads/pengetahuan/' . $pengetahuan['thumbnail_pengetahuan'];
-    //         if (
-    //             !empty($pengetahuan['thumbnail_pengetahuan']) &&
-    //             $pengetahuan['thumbnail_pengetahuan'] != 'default.jpg' &&
-    //             file_exists($thumbnailLama)
-    //         ) {
-    //             unlink($thumbnailLama);
-    //         }
-
-    //         $namaThumbnail = $thumbnail->getRandomName();
-    //         $thumbnail->move('assets/uploads/pengetahuan', $namaThumbnail);
-    //         $data['thumbnail_pengetahuan'] = $namaThumbnail;
-    //     }
-
-    //     $this->pengetahuanModel->update($id, $data);
-
-    //     session()->setFlashdata('pesan', 'Data berhasil diubah.');
-    //     return redirect()->to('/pegawai/pengetahuan');
-    // }
-
-
-    // public function delete($id)
-    // {
-    //     $pengetahuan = $this->pengetahuanModel->find($id);
-
-    //     // Hapus file PDF
-    //     unlink('assets/uploads/pengetahuan/' . $pengetahuan['file_pdf_pengetahuan']);
-
-    //     // Hapus thumbnail jika bukan default
-    //     if ($pengetahuan['thumbnail_pengetahuan'] != 'default.jpg') {
-    //         unlink('assets/uploads/pengetahuan/' . $pengetahuan['thumbnail_pengetahuan']);
-    //     }
-
-    //     $this->pengetahuanModel->delete($id);
-    //     session()->setFlashdata('pesan', 'Data berhasil dihapus.');
-    //     return redirect()->to('/pegawai/pengetahuan');
-    // }
 
     public function delete($id)
     {
@@ -349,69 +271,6 @@ class Pengetahuan extends BaseController
         ]);
     }
 
-    // public function get_pdf_for_chat($id)
-    // {
-    //     $model = new PengetahuanModel();
-    //     $pengetahuan = $model->find($id);
-
-    //     if (!$pengetahuan) {
-    //         return $this->response->setJSON(['error' => 'Dokumen tidak ditemukan'])->setStatusCode(404);
-    //     }
-
-    //     $pdfPath = WRITEPATH . '../public/assets/uploads/pengetahuan/' . $pengetahuan['file_pdf_pengetahuan'];
-    //     if (!file_exists($pdfPath)) {
-    //         return $this->response->setJSON(['error' => 'File PDF tidak ditemukan'])->setStatusCode(404);
-    //     }
-
-    //     return $this->response->setJSON([
-    //         'pdf_url' => base_url('assets/uploads/pengetahuan/' . $pengetahuan['file_pdf_pengetahuan']),
-    //         'pdf_path' => $pdfPath,
-    //         'pdf_size' => filesize($pdfPath)
-    //     ]);
-    // }
-
-    // public function get_pdf_for_chat($id)
-    // {
-    //     try {
-    //         $model = new PengetahuanModel();
-    //         $pengetahuan = $model->find($id);
-
-    //         if (!$pengetahuan) {
-    //             log_message('error', 'PDF not found for chat - ID: ' . $id);
-    //             return $this->response->setStatusCode(404)->setJSON([
-    //                 'error' => 'Dokumen tidak ditemukan',
-    //                 'details' => ['id' => $id]
-    //             ]);
-    //         }
-
-    //         $pdfPath = WRITEPATH . '../public/assets/uploads/pengetahuan/' . $pengetahuan['file_pdf_pengetahuan'];
-
-    //         if (!file_exists($pdfPath)) {
-    //             log_message('error', 'PDF file missing - Path: ' . $pdfPath);
-    //             return $this->response->setStatusCode(404)->setJSON([
-    //                 'error' => 'File PDF tidak ditemukan di server',
-    //                 'details' => ['path' => $pdfPath]
-    //             ]);
-    //         }
-
-    //         // Return informasi lengkap termasuk ukuran file
-    //         return $this->response->setJSON([
-    //             'status' => 'success',
-    //             'pdf_url' => base_url('assets/uploads/pengetahuan/' . $pengetahuan['file_pdf_pengetahuan']),
-    //             'file_info' => [
-    //                 'size' => filesize($pdfPath),
-    //                 'last_modified' => date("Y-m-d H:i:s", filemtime($pdfPath))
-    //             ]
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         log_message('error', 'Error in get_pdf_for_chat: ' . $e->getMessage());
-    //         return $this->response->setStatusCode(500)->setJSON([
-    //             'error' => 'Terjadi kesalahan internal',
-    //             'details' => $e->getMessage()
-    //         ]);
-    //     }
-    // }
-
     public function get_pdf_for_chat($id)
     {
         // Hanya response JSON untuk API
@@ -449,38 +308,6 @@ class Pengetahuan extends BaseController
 
         return round($bytes, $precision) . ' ' . $units[$pow];
     }
-
-    // public function comment($pengetahuan_id)
-    // {
-    //     if (!$this->request->is('post')) {
-    //         return redirect()->back();
-    //     }
-
-    //     $validation = \Config\Services::validation();
-    //     $validation->setRules([
-    //         'komentar' => 'required|min_length[3]|max_length[1000]'
-    //     ]);
-
-    //     if (!$validation->withRequest($this->request)->run()) {
-    //         return redirect()->back()->withInput()->with('errors', $validation->getErrors());
-    //     }
-
-    //     $komentarModel = new \App\Models\KomentarPengetahuanModel();
-
-    //     $data = [
-    //         'pengetahuan_id' => $pengetahuan_id,
-    //         'user_id' => session()->get('id'), // Pastikan user sudah login
-    //         'komentar' => $this->request->getPost('komentar'),
-    //         'created_at' => date('Y-m-d H:i:s')
-    //     ];
-
-    //     if ($komentarModel->addKomentar($data)) {
-    //         return redirect()->back()->with('message', 'Komentar berhasil ditambahkan');
-    //     } else {
-    //         return redirect()->back()->with('error', 'Gagal menambahkan komentar');
-    //     }
-    // }
-
 
     // app/Controllers/Pengetahuan.php
     public function comment($pengetahuan_id)
