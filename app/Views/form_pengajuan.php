@@ -73,7 +73,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="unit_kerja" class="form-label fw-bold">Unit Kerja <span class="text-danger">*</span></label>
+                    <label for="unit_kerja" class="form-label fw-bold">Nama Instansi <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="unit_kerja" name="unit_kerja"
                         value="<?= old('unit_kerja') ?>" required>
                 </div>

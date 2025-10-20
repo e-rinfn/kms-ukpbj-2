@@ -142,7 +142,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="unit_kerja" class="form-label fw-bold">Unit Kerja</label>
+                    <label for="unit_kerja" class="form-label fw-bold">Nama Instansi</label>
                     <input type="text" class="form-control <?= session()->getFlashdata('errors.unit_kerja') ? 'is-invalid' : '' ?>"
                         id="unit_kerja" name="unit_kerja"
                         value="<?= old('unit_kerja', $user['unit_kerja'] ?? '') ?>">
