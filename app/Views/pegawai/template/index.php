@@ -64,7 +64,7 @@
                     <tr class="text-center">
                         <th>No</th>
                         <th>Judul</th>
-                        <!-- <th>File</th> -->
+                        <th>File</th>
                         <th>Akses Publik</th>
                         <th>Dibuat Oleh</th>
                         <th>Aksi</th>
@@ -77,35 +77,30 @@
                         </tr>
                     <?php else: ?>
                         <?php $i = 1 + (($pager->getCurrentPage() - 1) * $pager->getPerPage()); ?>
-                        <?php foreach ($template as $t): ?>
+                        <?php foreach ($template as $p): ?>
                             <tr>
                                 <td class="text-center"><?= $i++; ?></td>
-                                <td><?= esc($t['judul']); ?></td>
-                                <!-- <td class="text-center">
-                                    <?php if (!empty($t['file_docx'])): ?>
-                                        <a href="<?= base_url('/assets/uploads/template/' . $t['file_docx']); ?>" target="_blank" style="background-color: #341EBB; border: none;" class="badge">Lihat File</a>
+                                <td><?= esc($p['judul']); ?></td>
+                                <td class="text-center">
+                                    <?php if (!empty($p['file_docx'])): ?>
+                                        <a href="<?= base_url('/assets/uploads/template/' . $p['file_docx']); ?>" target="_blank" style="background-color: green; border: none;" class="badge">Download File</a>
                                     <?php else: ?>
                                         <span class="badge bg-secondary">Tidak ada file</span>
                                     <?php endif; ?>
-                                </td> -->
+                                </td>
                                 <td class="text-center">
-                                    <span class="badge bg-<?= $t['akses_publik'] ? 'success' : 'secondary'; ?>">
-                                        <?= $t['akses_publik'] ? 'Publik' : 'Tidak'; ?>
+                                    <span class="badge bg-<?= $p['akses_publik'] ? 'success' : 'secondary'; ?>">
+                                        <?= $p['akses_publik'] ? 'Publik' : 'Tidak'; ?>
                                     </span>
                                 </td>
-                                <td class="text-center"><?= esc($t['user_nama']); ?></td>
+                                <td class="text-center"><?= esc($p['user_nama']); ?></td>
                                 <td class="text-center">
-                                    <!-- <a href="/pegawai/template/view/<?= $t['id']; ?>" class="btn btn-sm btn-success">Detail</a> -->
-                                    <?php if (!empty($t['file_docx'])): ?>
-                                        <a href="<?= base_url('/assets/uploads/template/' . $t['file_docx']); ?>" class="btn btn-sm btn-success">Download</a>
-                                    <?php else: ?>
-                                        <span class="badge bg-secondary">Tidak ada file</span>
-                                    <?php endif; ?>
-                                    <a href="/pegawai/template/edit/<?= $t['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
-                                    <form action="/pegawai/template/delete/<?= $t['id']; ?>" method="post" class="d-inline delete-form">
+                                    <a href="/pegawai/template/view/<?= $p['id']; ?>" class="btn btn-sm btn-info">Detail</a>
+                                    <a href="/pegawai/template/edit/<?= $p['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
+                                    <form action="/pegawai/template/delete/<?= $p['id']; ?>" method="post" class="d-inline delete-form">
                                         <?= csrf_field(); ?>
                                         <input type="hidden" name="_method" value="DELETE">
-                                        <button type="button" class="btn btn-sm btn-danger btn-delete" data-id="<?= $t['id']; ?>">
+                                        <button type="button" class="btn btn-sm btn-danger btn-delete" data-id="<?= $p['id']; ?>">
                                             Hapus
                                         </button>
                                     </form>

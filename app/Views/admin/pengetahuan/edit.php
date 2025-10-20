@@ -38,7 +38,7 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">File PDF Saat Ini</label>
                     <input type="file" name="file_pdf" id="file_pdf" class="form-control">
-                    <div class="form-text">Biarkan kosong jika tidak ingin mengubah file PDF (maks 5MB)</div>
+                    <div class="form-text">Biarkan kosong jika tidak ingin mengubah file PDF (maks 50MB)</div>
                     <div class="mb-2">
                         <a href="<?= base_url('assets/uploads/pengetahuan/' . $pengetahuan['file_pdf_pengetahuan']); ?>"
                             target="_blank" class="text-decoration-none">
@@ -62,7 +62,7 @@
 
             <!-- Caption -->
             <div class="mb-3">
-                <label for="caption" class="form-label fw-bold">Caption</label>
+                <label for="caption" class="form-label fw-bold">Deskripsi</label>
                 <textarea name="caption" id="caption" class="form-control" rows="20"><?= old('caption', $pengetahuan['caption_pengetahuan']); ?></textarea>
             </div>
 

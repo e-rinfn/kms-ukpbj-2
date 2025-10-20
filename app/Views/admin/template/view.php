@@ -10,10 +10,10 @@ $user_id = session()->get('id'); // Sesuai dengan 'id' yang diset di session
 
 <style>
     .pdf-viewer-container {
-        border: 1px solid #eee;
-        border-radius: 5px;
+        /* border: 1px solid #eee; */
+        /* border-radius: 5px; */
         padding: 10px;
-        background: #f9f9f9;
+        /* background: #f9f9f9; */
         margin-bottom: 20px;
     }
 
@@ -92,8 +92,16 @@ $docxPath = WRITEPATH . '../public/assets/uploads/template/' . $template['file_d
 $docxUrl  = base_url('assets/uploads/template/' . $template['file_docx']);
 ?>
 
-<?php if (!empty($template['file_docx']) && file_exists($docxPath)): ?>
-    <div class="pdf-viewer-container">
+<div class="container mt-3">
+    <?php if (!empty($template['file_docx']) && file_exists($docxPath)): ?>
+        <div class="pdf-viewer-container">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <a href="/admin/template" class="btn btn-danger rounded-pill fw-bold">
+                    <i class="bi bi-arrow-left"></i> Kembali Ke Daftar
+                </a>
+            </div>
+        </div>
+
         <!-- Google Docs Viewer -->
         <iframe
             src="https://docs.google.com/gview?url=<?= urlencode($docxUrl) ?>&embedded=true"
@@ -109,7 +117,7 @@ $docxUrl  = base_url('assets/uploads/template/' . $template['file_docx']);
                 <i class="bi bi-download"></i> Unduh DOCX
             </a>
         </div>
-    </div>
+</div>
 <?php else: ?>
     <div class="alert alert-danger">
         <?php if (empty($template['file_docx'])): ?>
@@ -119,5 +127,5 @@ $docxUrl  = base_url('assets/uploads/template/' . $template['file_docx']);
         <?php endif; ?>
     </div>
 <?php endif; ?>
-
+</div>
 <?= $this->endSection(); ?>

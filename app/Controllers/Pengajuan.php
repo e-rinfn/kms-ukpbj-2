@@ -29,14 +29,58 @@ class Pengajuan extends BaseController
         $validation = \Config\Services::validation();
 
         $rules = [
-            'nama' => 'required|min_length[3]',
-            'nik' => 'required|numeric|min_length[16]|max_length[16]',
-            'email' => 'required|valid_email',
-            'password' => 'required|min_length[6]',
-            'no_hp' => 'required',
-            'unit_kerja' => 'required',
-            'file_pengajuan' => 'uploaded[file_pengajuan]|max_size[file_pengajuan,2048]|ext_in[file_pengajuan,pdf,jpg,jpeg,png]'
+            'nama' => [
+                'rules' => 'required|min_length[3]',
+                'errors' => [
+                    'required' => 'Nama harus diisi.',
+                    'min_length' => 'Nama minimal {param} karakter.'
+                ]
+            ],
+            'nik' => [
+                'rules' => 'required|numeric|min_length[16]|max_length[16]',
+                'errors' => [
+                    'required' => 'NIK wajib diisi.',
+                    'numeric' => 'NIK hanya boleh berisi angka.',
+                    'min_length' => 'NIK harus terdiri dari {param} angka.',
+                    'max_length' => 'NIK harus terdiri dari {param} angka.'
+                ]
+            ],
+            'email' => [
+                'rules' => 'required|valid_email',
+                'errors' => [
+                    'required' => 'Email wajib diisi.',
+                    'valid_email' => 'Format email tidak valid.'
+                ]
+            ],
+            'password' => [
+                'rules' => 'required|min_length[6]',
+                'errors' => [
+                    'required' => 'Password wajib diisi.',
+                    'min_length' => 'Password minimal {param} karakter.'
+                ]
+            ],
+            'no_hp' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Nomor HP wajib diisi.'
+                ]
+            ],
+            'unit_kerja' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Unit kerja wajib diisi.'
+                ]
+            ],
+            'file_pengajuan' => [
+                'rules' => 'uploaded[file_pengajuan]|max_size[file_pengajuan,20480]|ext_in[file_pengajuan,pdf,jpg,jpeg,png]',
+                'errors' => [
+                    'uploaded' => 'File pengajuan harus diunggah.',
+                    'max_size' => 'Ukuran file maksimal 20MB.',
+                    'ext_in' => 'Format file harus PDF, JPG, JPEG, atau PNG.'
+                ]
+            ]
         ];
+
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());

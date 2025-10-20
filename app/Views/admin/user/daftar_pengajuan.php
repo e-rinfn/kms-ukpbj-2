@@ -31,7 +31,7 @@
         <div class="table-responsive">
             <table class="table table-hover table-striped align-middle">
                 <thead class="table-light text-center">
-                    <tr>
+                    <tr class="text-center">
                         <th>No</th>
                         <th>Nama</th>
                         <th>NIK</th>
@@ -47,13 +47,13 @@
                         <?php $no = 1; ?>
                         <?php foreach ($pengajuan as $p): ?>
                             <tr>
-                                <td><?= $no++ ?></td>
+                                <td class="text-center"><?= $no++ ?></td>
                                 <td><?= esc($p['nama']) ?></td>
                                 <td><?= esc($p['nik']) ?></td>
                                 <td><?= esc($p['email']) ?></td>
                                 <td><?= esc($p['unit_kerja']) ?></td>
                                 <td><?= tanggal_indo($p['created_at'], true) ?></td>
-                                <td>
+                                <td class="text-center">
                                     <?php if ($p['file_pengajuan']): ?>
                                         <a href="<?= base_url('uploads/pengajuan/' . $p['file_pengajuan']) ?>" target="_blank" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye"></i> Lihat
@@ -62,15 +62,13 @@
                                         <span class="badge bg-warning text-dark">Tidak ada</span>
                                     <?php endif; ?>
                                 </td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button onclick="approvePengajuan(<?= $p['id'] ?>)" class="btn btn-sm btn-success">
-                                            <i class="fas fa-check"></i> Approve
-                                        </button>
-                                        <button onclick="deletePengajuan(<?= $p['id'] ?>)" class="btn btn-sm btn-danger">
-                                            <i class="fas fa-trash"></i> Hapus
-                                        </button>
-                                    </div>
+                                <td class="text-center">
+                                    <button onclick="approvePengajuan(<?= $p['id'] ?>)" class="btn btn-sm btn-success">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button onclick="deletePengajuan(<?= $p['id'] ?>)" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

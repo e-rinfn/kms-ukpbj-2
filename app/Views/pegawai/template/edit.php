@@ -38,7 +38,7 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">File DOCX Saat Ini</label>
                     <input type="file" name="file_docx" id="file_docx" class="form-control">
-                    <div class="form-text">Biarkan kosong jika tidak ingin mengubah file DOCX (maks 5MB)</div>
+                    <div class="form-text">Biarkan kosong jika tidak ingin mengubah file DOCX (maks 50MB)</div>
                     <div class="mb-2">
                         <a href="<?= base_url('assets/uploads/template/' . $template['file_docx']); ?>"
                             target="_blank" class="text-decoration-none">

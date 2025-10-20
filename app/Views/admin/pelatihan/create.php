@@ -29,12 +29,18 @@
                 <input type="text" name="judul" id="judul" class="form-control" required placeholder="Masukkan judul pelatihan">
             </div>
 
+            <!-- Tambahkan checkbox konfirmasi di form -->
+            <div class="form-check mb-3">
+                <input type="checkbox" name="confirm_upload" id="confirm_upload" class="form-check-input">
+                <label for="confirm_upload" class="form-check-label">Saya ingin mengupload video ke sistem</label>
+            </div>
+
             <div class="row mb-3">
                 <!-- Upload Video -->
                 <div class="col-md-6">
                     <label for="video" class="form-label fw-bold">Video</label>
                     <input type="file" name="video" id="video" class="form-control" accept=".mp4,.mov,.avi">
-                    <small class="text-muted">Format: mp4, mov, avi | Maksimal 10MB</small>
+                    <small class="text-muted">Format: mp4, mov, avi | Maksimal 500MB</small>
 
                     <!-- Progress Bar Container -->
                     <div id="uploadProgressContainer" class="mt-2" style="display: none;">
@@ -54,13 +60,13 @@
                 <!-- Link Video -->
                 <div class="col-md-6">
                     <label for="link_youtube" class="form-label fw-bold">Link YouTube</label>
-                    <input type="text" name="link_youtube" id="link_youtube" class="form-control" required placeholder="Masukkan link video">
+                    <input type="text" name="link_youtube" id="link_youtube" class="form-control" placeholder="Masukkan link video">
                 </div>
             </div>
 
             <!-- Caption -->
             <div class="mb-3">
-                <label for="caption" class="form-label fw-bold">Caption</label>
+                <label for="caption" class="form-label fw-bold">Deskripsi</label>
                 <textarea name="caption" id="caption" class="form-control" rows="20" placeholder="Tulis caption di sini..."></textarea>
             </div>
 
@@ -83,12 +89,6 @@
             <div class="form-check mb-3">
                 <input type="checkbox" name="akses_publik" id="akses_publik" value="1" class="form-check-input">
                 <label for="akses_publik" class="form-check-label">Akses Publik</label>
-            </div>
-
-            <!-- Tambahkan checkbox konfirmasi di form -->
-            <div class="form-check mb-3">
-                <input type="checkbox" name="confirm_upload" id="confirm_upload" class="form-check-input">
-                <label for="confirm_upload" class="form-check-label">Saya ingin mengupload video ke sistem</label>
             </div>
 
             <!-- Tombol Aksi -->

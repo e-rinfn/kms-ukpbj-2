@@ -71,8 +71,7 @@ class Pelatihan extends BaseController
 
         // Validasi dasar yang selalu diperlukan
         $validationRules = [
-            'judul' => 'required',
-            'caption' => 'required'
+            'judul' => 'required'
         ];
 
         // Cek apakah user memilih untuk upload video atau tidak
@@ -99,7 +98,7 @@ class Pelatihan extends BaseController
                     'errors' => $this->validator->getErrors()
                 ]);
             }
-            return redirect()->to('/admin/pelatihan/create')->withInput();
+            return redirect()->to('/pegawai/pelatihan/create')->withInput();
         }
 
         try {
@@ -129,7 +128,7 @@ class Pelatihan extends BaseController
             }
 
             session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
-            return redirect()->to('/admin/pelatihan');
+            return redirect()->to('/pegawai/pelatihan');
         } catch (\Exception $e) {
             if ($isAjax) {
                 return $this->response->setJSON([
@@ -139,7 +138,7 @@ class Pelatihan extends BaseController
             }
 
             session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
-            return redirect()->to('/admin/pelatihan/create')->withInput();
+            return redirect()->to('/pegawai/pelatihan/create')->withInput();
         }
     }
 
@@ -158,49 +157,6 @@ class Pelatihan extends BaseController
         ]);
     }
 
-    // public function update($id)
-    // {
-    //     $pelatihan = $this->pelatihanModel->find($id);
-
-    //     $rules = [
-    //         'judul' => 'required'
-    //     ];
-
-    //     if ($this->request->getFile('video')->getError() != 4) {
-    //         $rules['video'] = [
-    //             'rules' => 'uploaded[video]|max_size[video,10240]|ext_in[video,mp4,mov,avi]',
-    //             'errors' => [
-    //                 'uploaded' => 'Pilih video terlebih dahulu',
-    //                 'max_size' => 'Ukuran video maksimal 10MB',
-    //                 'ext_in' => 'Format video harus mp4, mov, atau avi'
-    //             ]
-    //         ];
-    //     }
-
-    //     if (!$this->validate($rules)) {
-    //         return redirect()->to('/pegawai/pelatihan/edit/' . $id)->withInput();
-    //     }
-
-    //     $data = [
-    //         'judul' => $this->request->getVar('judul'),
-    //         'caption_pelatihan' => $this->request->getVar('caption'),
-    //         'akses_publik' => $this->request->getVar('akses_publik') ? 1 : 0,
-    //     ];
-
-    //     // Update video jika ada
-    //     $video = $this->request->getFile('video');
-    //     if ($video->getError() != 4) {
-    //         unlink('assets/uploads/pelatihan/' . $pelatihan['video_pelatihan']);
-    //         $namaVideo = $video->getRandomName();
-    //         $video->move('assets/uploads/pelatihan', $namaVideo);
-    //         $data['video_pelatihan'] = $namaVideo;
-    //     }
-
-    //     $this->pelatihanModel->update($id, $data);
-
-    //     session()->setFlashdata('pesan', 'Data berhasil diubah.');
-    //     return redirect()->to('/pegawai/pelatihan');
-    // }
 
     public function update($id)
     {
@@ -211,8 +167,7 @@ class Pelatihan extends BaseController
         }
 
         $rules = [
-            'judul'   => 'required',
-            'caption' => 'required'
+            'judul'   => 'required'
         ];
 
         $uploadChoice = $this->request->getVar('upload_choice');
@@ -287,19 +242,6 @@ class Pelatihan extends BaseController
         session()->setFlashdata('pesan', 'Data berhasil diubah.');
         return redirect()->to('/pegawai/pelatihan');
     }
-
-
-    // public function delete($id)
-    // {
-    //     $pelatihan = $this->pelatihanModel->find($id);
-
-    //     // Hapus video
-    //     unlink('assets/uploads/pelatihan/' . $pelatihan['video_pelatihan']);
-
-    //     $this->pelatihanModel->delete($id);
-    //     session()->setFlashdata('pesan', 'Data berhasil dihapus.');
-    //     return redirect()->to('/pegawai/pelatihan');
-    // }
 
     public function delete($id)
     {

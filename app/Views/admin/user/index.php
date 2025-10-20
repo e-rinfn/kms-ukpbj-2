@@ -7,7 +7,7 @@
         <!-- Baris judul + tombol -->
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h2 class="mb-0">DAFTAR PENGGUNA</h2>
-            <a href="/admin/user/create" class="btn btn-danger rounded-pill">
+            <a href="/admin/user/create" style="background-color: #EC1928;" class="btn btn-danger rounded-pill fw-bold">
                 <i class="bi bi-plus-circle"></i> Tambah Pengguna
             </a>
         </div>
@@ -78,7 +78,7 @@
 
 
                 <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">Terapkan</button>
+                    <button type="submit" style="background-color: #341EBB; border: none;" class="btn btn-primary w-100">Terapkan</button>
                 </div>
             </form>
 

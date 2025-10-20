@@ -33,8 +33,8 @@
                 <!-- File DOCX -->
                 <div class="col-md-6 mb-3">
                     <label for="file_docx" class="form-label fw-bold">File DOCX</label>
-                    <input type="file" name="file_docx" id="file_docx" class="form-control" required>
-                    <div class="form-text">Maksimal 5MB</div>
+                    <input type="file" name="file_docx" id="file_docx" class="form-control" required accept=".docx">
+                    <div class="form-text">Maksimal 50MB</div>
                 </div>
             </div>
 
@@ -49,4 +49,19 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('file_docx').addEventListener('change', function() {
+        const fileInput = this.files[0];
+        if (fileInput) {
+            let fileName = fileInput.name;
+            // Hapus ekstensi .docx
+            fileName = fileName.replace(/\.[^/.]+$/, "");
+            // Ubah underscore/dash jadi spasi
+            fileName = fileName.replace(/[_-]+/g, " ");
+            document.getElementById('judul').value = fileName;
+        }
+    });
+</script>
+
 <?= $this->endSection(); ?>

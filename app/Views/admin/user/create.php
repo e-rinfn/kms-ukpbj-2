@@ -100,8 +100,8 @@
                     <label for="level" class="form-label fw-bold ">Level <span class="text-danger">*</span></label>
                     <select class="form-control" id="level" name="level" required>
                         <option value="admin" <?= old('level') == 'admin' ? 'selected' : '' ?>>Admin</option>
-                        <option value="pegawai" <?= old('level') == 'pegawai' || !old('level') ? 'selected' : '' ?>>Pegawai</option>
-                        <option value="user" <?= old('level') == 'user' || !old('level') ? 'selected' : '' ?>>User</option>
+                        <option value="pegawai" <?= old('level') == 'pegawai' || !old('level') ? 'selected' : '' ?>>UKPBJ</option>
+                        <option value="user" <?= old('level') == 'user' || !old('level') ? 'selected' : '' ?>>OPD</option>
                     </select>
                 </div>
                 <div class="col-md-6">

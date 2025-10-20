@@ -124,7 +124,7 @@
                 <label for="caption" class="form-label fw-bold">Caption <span class="text-danger">*</span></label>
                 <textarea name="caption" id="caption"
                     class="form-control <?= session('errors.caption') ? 'is-invalid' : '' ?>"
-                    rows="20" required placeholder="Tulis caption di sini..."><?= old('caption', $pelatihan['caption_pelatihan']); ?></textarea>
+                    rows="20" placeholder="Tulis caption di sini..."><?= old('caption', $pelatihan['caption_pelatihan']); ?></textarea>
                 <?php if (session('errors.caption')): ?>
                     <div class="invalid-feedback">
                         <?= session('errors.caption') ?>

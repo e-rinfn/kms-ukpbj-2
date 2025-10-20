@@ -134,10 +134,10 @@ class Template extends BaseController
 
         if ($this->request->getFile('file_docx')->getError() != 4) {
             $rules['file_docx'] = [
-                'rules' => 'uploaded[file_docx]|max_size[file_docx,5120]|ext_in[file_docx,docx]',
+                'rules' => 'uploaded[file_docx]|max_size[file_docx,51200]|ext_in[file_docx,docx]',
                 'errors' => [
                     'uploaded' => 'Pilih file PDF terlebih dahulu',
-                    'max_size' => 'Ukuran file maksimal 5MB',
+                    'max_size' => 'Ukuran file maksimal 50MB',
                     'ext_in' => 'File harus berformat PDF'
                 ]
             ];

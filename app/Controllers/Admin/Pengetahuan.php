@@ -77,9 +77,9 @@ class Pengetahuan extends BaseController
             ],
             'thumbnail' => [
                 // Tidak wajib upload, tapi jika ada harus valid
-                'rules' => 'if_exist|max_size[thumbnail,1024]|is_image[thumbnail]|mime_in[thumbnail,image/jpg,image/jpeg,image/png]',
+                'rules' => 'if_exist|max_size[thumbnail,4096]|is_image[thumbnail]|mime_in[thumbnail,image/jpg,image/jpeg,image/png]',
                 'errors' => [
-                    'max_size' => 'Ukuran gambar maksimal 1MB',
+                    'max_size' => 'Ukuran gambar maksimal 4MB',
                     'is_image' => 'Yang anda pilih bukan gambar',
                     'mime_in'  => 'Yang anda pilih bukan gambar'
                 ]
@@ -157,7 +157,7 @@ class Pengetahuan extends BaseController
                 'rules' => 'uploaded[file_pdf]|max_size[file_pdf,51200]|ext_in[file_pdf,pdf]',
                 'errors' => [
                     'uploaded' => 'Pilih file PDF terlebih dahulu',
-                    'max_size' => 'Ukuran file maksimal 5MB',
+                    'max_size' => 'Ukuran file maksimal 50MB',
                     'ext_in'   => 'File harus berformat PDF'
                 ]
             ];
@@ -167,9 +167,9 @@ class Pengetahuan extends BaseController
         $thumbnail = $this->request->getFile('thumbnail');
         if ($thumbnail->getError() != 4) {
             $rules['thumbnail'] = [
-                'rules' => 'max_size[thumbnail,1024]|is_image[thumbnail]|mime_in[thumbnail,image/jpg,image/jpeg,image/png]',
+                'rules' => 'max_size[thumbnail,4096]|is_image[thumbnail]|mime_in[thumbnail,image/jpg,image/jpeg,image/png]',
                 'errors' => [
-                    'max_size' => 'Ukuran gambar maksimal 1MB',
+                    'max_size' => 'Ukuran gambar maksimal 4MB',
                     'is_image' => 'Yang anda pilih bukan gambar',
                     'mime_in'  => 'Yang anda pilih bukan gambar'
                 ]

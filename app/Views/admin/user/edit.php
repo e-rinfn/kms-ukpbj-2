@@ -40,6 +40,7 @@
 
                 <div class="col-md-6">
                     <label for="username" class="form-label fw-bold">Username</label>
+                    <span class="text-danger">*</span>
                     <input type="text" class="form-control <?= session()->getFlashdata('errors.username') ? 'is-invalid' : '' ?>"
                         id="username" name="username"
                         value="<?= old('username', $user['username'] ?? '') ?>" required>
@@ -71,6 +72,7 @@
 
                 <div class="col-md-6">
                     <label for="nama" class="form-label fw-bold">Nama Lengkap</label>
+                    <span class="text-danger">*</span>
                     <input type="text" class="form-control <?= session()->getFlashdata('errors.nama') ? 'is-invalid' : '' ?>"
                         id="nama" name="nama"
                         value="<?= old('nama', $user['nama'] ?? '') ?>" required>
@@ -83,6 +85,7 @@
 
                 <div class="col-md-6">
                     <label for="email" class="form-label fw-bold">Email</label>
+                    <span class="text-danger">*</span>
                     <input type="email" class="form-control <?= session()->getFlashdata('errors.email') ? 'is-invalid' : '' ?>"
                         id="email" name="email"
                         value="<?= old('email', $user['email'] ?? '') ?>" required>
@@ -99,7 +102,7 @@
 
                 <div class="col-md-6">
                     <label for="nik" class="form-label fw-bold">NIK</label>
-                    <input type="text" class="form-control <?= session()->getFlashdata('errors.nik') ? 'is-invalid' : '' ?>"
+                    <input type="number" class="form-control <?= session()->getFlashdata('errors.nik') ? 'is-invalid' : '' ?>"
                         id="nik" name="nik"
                         value="<?= old('nik', $user['nik'] ?? '') ?>" maxlength="16">
                     <?php if (session()->getFlashdata('errors.nik')): ?>
@@ -111,8 +114,8 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="no_hp" class="form-label fw-bold">No. HP</label>
-                    <input type="text" class="form-control <?= session()->getFlashdata('errors.no_hp') ? 'is-invalid' : '' ?>"
+                    <label for="no_hp" class="form-label fw-bold">No HP</label>
+                    <input type="number" class="form-control <?= session()->getFlashdata('errors.no_hp') ? 'is-invalid' : '' ?>"
                         id="no_hp" name="no_hp"
                         value="<?= old('no_hp', $user['no_hp'] ?? '') ?>">
                     <?php if (session()->getFlashdata('errors.no_hp')): ?>
@@ -122,6 +125,21 @@
                     <?php endif; ?>
                 </div>
 
+                <div class="col-md-6">
+                    <label for="level" class="form-label fw-bold">Level</label>
+                    <span class="text-danger">*</span>
+                    <select class="form-control <?= session()->getFlashdata('errors.level') ? 'is-invalid' : '' ?>"
+                        id="level" name="level" required>
+                        <option value="admin" <?= old('level', $user['level'] ?? '') == 'admin' ? 'selected' : '' ?>>Admin</option>
+                        <option value="pegawai" <?= old('level', $user['level'] ?? '') == 'pegawai' ? 'selected' : '' ?>>UKPBJ</option>
+                        <option value="user" <?= old('level', $user['level'] ?? '') == 'user' ? 'selected' : '' ?>>OPD</option>
+                    </select>
+                    <?php if (session()->getFlashdata('errors.level')): ?>
+                        <div class="invalid-feedback">
+                            <?= esc(session()->getFlashdata('errors.level')) ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
                 <div class="col-md-6">
                     <label for="unit_kerja" class="form-label fw-bold">Unit Kerja</label>
@@ -131,21 +149,6 @@
                     <?php if (session()->getFlashdata('errors.unit_kerja')): ?>
                         <div class="invalid-feedback">
                             <?= esc(session()->getFlashdata('errors.unit_kerja')) ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
-
-                <div class="col-md-6">
-                    <label for="level" class="form-label fw-bold">Level</label>
-                    <select class="form-control <?= session()->getFlashdata('errors.level') ? 'is-invalid' : '' ?>"
-                        id="level" name="level" required>
-                        <option value="admin" <?= old('level', $user['level'] ?? '') == 'admin' ? 'selected' : '' ?>>Admin</option>
-                        <option value="pegawai" <?= old('level', $user['level'] ?? '') == 'pegawai' ? 'selected' : '' ?>>Pegawai</option>
-                        <option value="user" <?= old('level', $user['level'] ?? '') == 'user' ? 'selected' : '' ?>>User</option>
-                    </select>
-                    <?php if (session()->getFlashdata('errors.level')): ?>
-                        <div class="invalid-feedback">
-                            <?= esc(session()->getFlashdata('errors.level')) ?>
                         </div>
                     <?php endif; ?>
                 </div>

@@ -6,7 +6,7 @@
         <!-- Baris judul + tombol -->
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h2 class="mb-0">TAMBAH TEMPLATE</h2>
-            <a href="/admin/template" style="background-color: #EC1928;" class="btn btn-danger rounded-pill fw-bold">
+            <a href="/pegawai/template" style="background-color: #EC1928;" class="btn btn-danger rounded-pill fw-bold">
                 <i class="bi bi-arrow-left"></i> Kembali Ke Daftar
             </a>
         </div>
@@ -20,7 +20,7 @@
     </div>
 
     <div class="card p-3 border rounded bg-light">
-        <form action="/admin/template/save" method="post" enctype="multipart/form-data">
+        <form action="/pegawai/template/save" method="post" enctype="multipart/form-data">
             <?= csrf_field(); ?>
 
             <!-- Judul -->
@@ -33,8 +33,8 @@
                 <!-- File DOCX -->
                 <div class="col-md-6 mb-3">
                     <label for="file_docx" class="form-label fw-bold">File DOCX</label>
-                    <input type="file" name="file_docx" id="file_docx" class="form-control" required>
-                    <div class="form-text">Maksimal 5MB</div>
+                    <input type="file" name="file_docx" id="file_docx" class="form-control" required accept=".docx">
+                    <div class="form-text">Maksimal 50MB</div>
                 </div>
             </div>
 
@@ -49,4 +49,19 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('file_docx').addEventListener('change', function() {
+        const fileInput = this.files[0];
+        if (fileInput) {
+            let fileName = fileInput.name;
+            // Hapus ekstensi .docx
+            fileName = fileName.replace(/\.[^/.]+$/, "");
+            // Ubah underscore/dash jadi spasi
+            fileName = fileName.replace(/[_-]+/g, " ");
+            document.getElementById('judul').value = fileName;
+        }
+    });
+</script>
+
 <?= $this->endSection(); ?>

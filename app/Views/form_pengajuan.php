@@ -42,7 +42,7 @@
 
                 <div class="col-md-6">
                     <label for="nik" class="form-label fw-bold">NIK <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="nik" name="nik"
+                    <input type="number" class="form-control" id="nik" name="nik"
                         value="<?= old('nik') ?>" required>
                 </div>
 
@@ -68,7 +68,7 @@
 
                 <div class="col-md-6">
                     <label for="no_hp" class="form-label fw-bold">Nomor HP <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="no_hp" name="no_hp"
+                    <input type="number" class="form-control" id="no_hp" name="no_hp"
                         value="<?= old('no_hp') ?>" required>
                 </div>
 
@@ -84,9 +84,9 @@
                 </div>
 
                 <div class="col-12">
-                    <label for="file_pengajuan" class="form-label fw-bold">Upload Dokumen Pendukung (PDF/Image)</label>
+                    <label for="file_pengajuan" class="form-label fw-bold">Upload Dokumen Pendukung dengan format PDF <span class="text-danger">*</span></label>
                     <input class="form-control" type="file" id="file_pengajuan" name="file_pengajuan" required>
-                    <small class="text-muted">Maksimal ukuran file 2MB</small>
+                    <small class="text-muted">Maksimal ukuran file 20MB</small>
                 </div>
 
                 <div class="mt-3 text-end">

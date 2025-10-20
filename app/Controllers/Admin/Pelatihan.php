@@ -71,8 +71,7 @@ class Pelatihan extends BaseController
 
         // Validasi dasar yang selalu diperlukan
         $validationRules = [
-            'judul' => 'required',
-            'caption' => 'required'
+            'judul' => 'required'
         ];
 
         // Cek apakah user memilih untuk upload video atau tidak
@@ -168,8 +167,7 @@ class Pelatihan extends BaseController
         }
 
         $rules = [
-            'judul'   => 'required',
-            'caption' => 'required'
+            'judul'   => 'required'
         ];
 
         $uploadChoice = $this->request->getVar('upload_choice');
