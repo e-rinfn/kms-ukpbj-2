@@ -47,7 +47,9 @@ class Pelatihan extends BaseController
         // Ambil pelatihan lain selain ID ini (maksimal 5 data)
         $pelatihanLain = $pelatihanModel
             ->where('id !=', $id)
-            ->findAll(5);
+            ->where('akses_publik', 1)
+            ->orderBy('created_at', 'DESC')
+            ->findAll(6); // Ambil maksimal 6 pengetahuan lain
 
         // Ambil komentar terkait
         $komentar = $komentarModel->getKomentarByPelatihan($id);
