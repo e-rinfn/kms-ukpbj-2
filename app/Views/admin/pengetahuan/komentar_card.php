@@ -30,13 +30,13 @@ if ($isLoggedIn) {
             <?php endif; ?>
 
             <?php if ($canDelete): ?>
-                <form action="<?= base_url('pengetahuan/delete-comment/' . $k['id']) ?>" method="POST">
+                <form action="<?= base_url('pengetahuan/delete-comment/' . $k['id']) ?>" method="POST" class="d-inline delete-comment-form">
                     <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-sm btn-danger"
-                        onclick="return confirm('Apakah Anda yakin ingin menghapus komentar ini?')">
+                    <button type="submit" class="btn btn-sm btn-danger">
                         <i class="bi bi-trash"></i> Hapus
                     </button>
                 </form>
+
             <?php endif; ?>
         </div>
 

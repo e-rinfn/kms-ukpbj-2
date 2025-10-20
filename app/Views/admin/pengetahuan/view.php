@@ -511,29 +511,37 @@ $user_id = session()->get('id'); // Sesuai dengan 'id' yang diset di session
             });
         </script>
 
-        <!-- Tambahkan SweetAlert2 (via CDN) -->
+        <!-- SweetAlert2 CDN -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
-            function confirmDelete(event, form) {
-                event.preventDefault(); // hentikan submit default
+            document.addEventListener('DOMContentLoaded', function() {
+                // Ambil semua form hapus komentar
+                const deleteForms = document.querySelectorAll('.delete-comment-form');
 
-                Swal.fire({
-                    title: 'Yakin Hapus?',
-                    text: "Komentar ini akan dihapus permanen!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Ya, Hapus',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit(); // submit form jika user konfirmasi
-                    }
+                deleteForms.forEach(form => {
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault(); // cegah submit langsung
+
+                        Swal.fire({
+                            title: 'Yakin ingin menghapus komentar ini?',
+                            text: 'Komentar yang dihapus tidak bisa dikembalikan.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Ya, hapus',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit(); // lanjutkan submit jika dikonfirmasi
+                            }
+                        });
+                    });
                 });
-            }
+            });
         </script>
+
 
     </div>
     <!-- <a href="/pengetahuan" class="btn btn-secondary mt-3">
