@@ -272,3 +272,4 @@ DEBUG - 2025-10-20 21:14:59 --> Data yang tersimpan di DB: Array
 
 DEBUG - 2025-10-20 21:14:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2025-10-20 21:15:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-10-20 21:24:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

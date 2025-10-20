@@ -183,7 +183,7 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    addMessage('Maaf, terjadi kesalahan. Silakan coba lagi.', 'bot');
+                    addMessage('Maaf, jawaban dari pertanyaan anda tidak ditemukan, silahkan coba lagi!', 'bot');
                 });
         }
 
