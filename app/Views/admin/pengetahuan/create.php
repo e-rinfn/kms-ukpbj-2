@@ -75,6 +75,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // isi otomatis judul dari nama file pdf
     document.getElementById('file_pdf').addEventListener('change', function(e) {
@@ -83,7 +84,6 @@
             let nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
             let judulInput = document.getElementById('judul');
             if (!judulInput.value) {
-                // hanya isi otomatis kalau judul masih kosong
                 judulInput.value = nameWithoutExt;
             }
         }
@@ -112,23 +112,39 @@
         });
 
         xhr.onload = function() {
+            document.getElementById('uploadProgressWrapper').style.display = 'none';
             if (xhr.status === 200) {
-                document.getElementById('alertMessage').innerHTML = `
-                    <div class="alert alert-success mt-3">Data berhasil ditambahkan!</div>
-                `;
-                document.getElementById('pengetahuanForm').reset();
-                if (captionEditor) captionEditor.setData('');
-                document.getElementById('uploadProgress').style.width = '0%';
-                document.getElementById('uploadProgress').innerText = '0%';
-                document.getElementById('uploadProgressWrapper').style.display = 'none';
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Data pengetahuan berhasil ditambahkan.',
+                    showConfirmButton: false,
+                    timer: 1800
+                }).then(() => {
+                    window.location.href = '/admin/pengetahuan'; // redirect ke daftar
+                });
             } else {
-                document.getElementById('alertMessage').innerHTML = `
-                    <div class="alert alert-danger mt-3">Gagal upload. Coba lagi.</div>
-                `;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Terjadi kesalahan saat upload. Coba lagi.',
+                    confirmButtonText: 'OK'
+                });
             }
+        };
+
+        xhr.onerror = function() {
+            document.getElementById('uploadProgressWrapper').style.display = 'none';
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: 'Koneksi gagal. Periksa jaringan Anda.',
+                confirmButtonText: 'OK'
+            });
         };
 
         xhr.send(formData);
     });
 </script>
+
 <?= $this->endSection(); ?>

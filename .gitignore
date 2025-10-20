@@ -3,4 +3,4 @@
 /node_modules
 /public/assets/uploads
 /public/uploads
-/writable
+writable/
